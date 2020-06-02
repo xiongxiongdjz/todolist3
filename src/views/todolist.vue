@@ -2,53 +2,59 @@
   <div class="todolist">
     <div class="todolist-1">
       <h2>代办事清单</h2>
-      <input type="checkbox" @click="allCompleted" :checked="displayEvery" />
-      <input type="text" v-model="content" @keyup.enter="access" />
+      <headerInput
+        :access="access"
+        :allCompleted="allCompleted"
+        :displayEvery="displayEvery"
+      />
     </div>
     <div class="todolist-2">
       <ul>
-        <li v-for="todo in filters" :key="todo.id">
-          <input
-            type="checkbox"
-            :checked="todo.completed"
-            @click="status(todo)"
+        <li v-for="todo in filterTodos" :key="todo.id">
+          <centerTodo
+            :todo="todo"
+            :status="status"
+            :outDelete="outDelete"
+            :titleChange="titleChange"
           />
-          {{ todo.title }}
-          <button @click="outDelete(todo.id)">删除</button>
         </li>
       </ul>
     </div>
     <div class="todolist-3">
-      <button @click="title = 'all'">所有</button>
-      <button @click="title = 'completed'">已完成</button>
-      <button @click="title = 'unCompleted'">未完成</button>
-      <button @click="selectedOut" v-show="displaySom">删除选中</button>
+      <bottomButton
+        :selectedOut="selectedOut"
+        :displaySom="displaySom"
+        ref="titleChange"
+        @titleChange="changeTitle"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import HeaderInput from "../components/sub-header-input";
+import CenterTodo from "../components/sub-center-todo";
+import BottomButton from "../components/sub-bottom-button";
 export default {
   data() {
     return {
       todos: [],
-      content: "",
       title: "all"
     };
   },
+  components: {
+    HeaderInput,
+    CenterTodo,
+    BottomButton
+  },
   methods: {
     //回车存入
-    access() {
-      switch (this.content != "") {
-        case true:
-          this.todos.push({
-            id: new Date().valueOf(),
-            title: this.content,
-            completed: false
-          });
-          this.content = "";
-          break;
-      }
+    access(content) {
+      this.todos.push({
+        id: new Date().valueOf(),
+        title: content,
+        completed: false
+      });
     },
     //完成
     status(todo) {
@@ -59,6 +65,11 @@ export default {
     outDelete(id) {
       const index = this.todos.findIndex(todo => todo.id == id);
       this.todos.splice(index, 1);
+    },
+    titleChange(content, id) {
+      const index = this.todos.findIndex(todo => todo.id == id);
+      this.todos[index].title = content;
+      localStorage.setItem("todos", JSON.stringify(this.todos));
     },
     //全选
     allCompleted() {
@@ -84,10 +95,13 @@ export default {
           1
         )
       );
+    },
+    changeTitle(newValue) {
+      this.title = newValue;
     }
   },
   computed: {
-    filters() {
+    filterTodos() {
       switch (this.title) {
         case "completed":
           return this.todos.filter(todo => todo.completed);
