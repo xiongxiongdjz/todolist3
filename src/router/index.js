@@ -3,6 +3,10 @@ import VueRouter from "vue-router";
 
 import Todolist from "../views/todolist";
 
+import All from "../views/sub-all";
+import Completed from "../views/sub-completed";
+import UnCompleted from "../views/sub-unCompleted";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -12,7 +16,25 @@ const routes = [
   },
   {
     path: "/todolist",
-    component: Todolist
+    component: Todolist,
+    children: [
+      {
+        path: "",
+        redirect: "/todolist/all"
+      },
+      {
+        path: "/todolist/all",
+        component: All
+      },
+      {
+        path: "/todolist/completed",
+        component: Completed
+      },
+      {
+        path: "/todolist/unCompleted",
+        component: UnCompleted
+      }
+    ]
   }
 ];
 

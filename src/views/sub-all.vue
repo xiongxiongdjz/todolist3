@@ -1,0 +1,25 @@
+<template>
+  <div>
+    <!-- {{ $route.query.todos }} -->
+    <ul>
+      <li v-for="todo in todos" :key="todo.id">
+        <centerTodo
+          :todo="todo"
+          :status="status"
+          :outDelete="outDelete"
+          :titleChange="titleChange"
+        />
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+import CenterTodo from "../components/sub-center-todo";
+export default {
+  props: ["todos", "status", "outDelete", "titleChange"],
+  components: {
+    CenterTodo
+  }
+};
+</script>

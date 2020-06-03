@@ -6,26 +6,22 @@
         :access="access"
         :allCompleted="allCompleted"
         :displayEvery="displayEvery"
+        :length="todos.length"
       />
     </div>
     <div class="todolist-2">
-      <ul>
-        <li v-for="todo in filterTodos" :key="todo.id">
-          <centerTodo
-            :todo="todo"
-            :status="status"
-            :outDelete="outDelete"
-            :titleChange="titleChange"
-          />
-        </li>
-      </ul>
+      <router-view
+        :todos="todos"
+        :status="status"
+        :outDelete="outDelete"
+        :titleChange="titleChange"
+      />
     </div>
     <div class="todolist-3">
       <bottomButton
         :selectedOut="selectedOut"
         :displaySom="displaySom"
-        ref="titleChange"
-        @titleChange="changeTitle"
+        :length="todos.length"
       />
     </div>
   </div>
@@ -33,18 +29,15 @@
 
 <script>
 import HeaderInput from "../components/sub-header-input";
-import CenterTodo from "../components/sub-center-todo";
 import BottomButton from "../components/sub-bottom-button";
 export default {
   data() {
     return {
-      todos: [],
-      title: "all"
+      todos: []
     };
   },
   components: {
     HeaderInput,
-    CenterTodo,
     BottomButton
   },
   methods: {
@@ -95,24 +88,9 @@ export default {
           1
         )
       );
-    },
-    changeTitle(newValue) {
-      this.title = newValue;
     }
   },
   computed: {
-    filterTodos() {
-      switch (this.title) {
-        case "completed":
-          return this.todos.filter(todo => todo.completed);
-
-        case "unCompleted":
-          return this.todos.filter(todo => !todo.completed);
-
-        default:
-          return this.todos;
-      }
-    },
     displayEvery() {
       return this.todos.every(todo => todo.completed);
     },

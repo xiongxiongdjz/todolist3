@@ -1,28 +1,31 @@
 <template>
   <div class="sub-bottom-button">
-    <button @click="title = 'all'">所有</button>
-    <button @click="title = 'completed'">已完成</button>
-    <button @click="title = 'unCompleted'">未完成</button>
-    <button @click="subSelectedOut" v-show="displaySom">删除选中</button>
+    <div v-show="length">
+      <router-link
+        :to="{
+          path: '/todolist/all'
+        }"
+        tag="button"
+        replace
+        >所有</router-link
+      >
+      <router-link :to="{ path: '/todolist/completed' }" tag="button" replace
+        >已完成</router-link
+      >
+      <router-link :to="{ path: '/todolist/unCompleted' }" tag="button" replace
+        >未完成</router-link
+      >
+      <button @click="subSelectedOut" v-show="displaySom">删除选中</button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["selectedOut", "displaySom"],
-  data() {
-    return {
-      title: "all"
-    };
-  },
+  props: ["selectedOut", "displaySom", "length"],
   methods: {
     subSelectedOut() {
       this.selectedOut();
-    }
-  },
-  watch: {
-    title(newValue) {
-      this.$emit("titleChange", newValue);
     }
   }
 };
