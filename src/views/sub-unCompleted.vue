@@ -1,29 +1,17 @@
 <template>
   <div>
     <ul>
-      <li v-for="todo in filterTodos" :key="todo.id">
-        <centerTodo
-          :todo="todo"
-          :status="status"
-          :outDelete="outDelete"
-          :titleChange="titleChange"
-        />
-      </li>
+      <li v-for="todo in todos" :key="todo.id">{{ todo.title }}</li>
     </ul>
   </div>
 </template>
 
 <script>
-import CenterTodo from "../components/sub-center-todo";
 export default {
-  props: ["todos", "status", "outDelete", "titleChange"],
-  components: {
-    CenterTodo
-  },
-  computed: {
-    filterTodos() {
-      return this.todos.filter(todo => !todo.completed);
-    }
+  data() {
+    return {
+      todos: JSON.parse(this.$route.query.unCompleteds)
+    };
   }
 };
 </script>

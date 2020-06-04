@@ -2,7 +2,7 @@
   <div class="todolist">
     <div class="todolist-1">
       <h2>代办事清单</h2>
-      <headerInput
+      <header-input
         :access="access"
         :allCompleted="allCompleted"
         :displayEvery="displayEvery"
@@ -10,18 +10,16 @@
       />
     </div>
     <div class="todolist-2">
-      <router-view
-        :todos="todos"
-        :status="status"
-        :outDelete="outDelete"
-        :titleChange="titleChange"
-      />
+      <router-view />
     </div>
     <div class="todolist-3">
-      <bottomButton
+      <bottom-button
         :selectedOut="selectedOut"
         :displaySom="displaySom"
         :length="todos.length"
+        :allPageJump="allPageJump"
+        :completedPageJump="completedPageJump"
+        :unCompletedPageJump="unCompletedPageJump"
       />
     </div>
   </div>
@@ -50,8 +48,9 @@ export default {
       });
     },
     //完成
-    status(todo) {
-      todo.completed = !todo.completed;
+    status(id) {
+      const index = this.todos.findIndex(todo => todo.id == id);
+      this.todos[index].completed = !this.todos[index].completed;
       localStorage.setItem("todos", JSON.stringify(this.todos));
     },
     // 删除
@@ -88,6 +87,41 @@ export default {
           1
         )
       );
+    },
+    // all页面跳转
+    allPageJump() {
+      const todosJSON = JSON.stringify(this.todos);
+      this.$router.push({
+        path: "/todolist/all",
+        query: {
+          todos: todosJSON,
+          status: this.status,
+          outDelete: this.outDelete,
+          titleChange: this.titleChange
+        }
+      });
+    },
+    // 完成页面跳转
+    completedPageJump() {
+      const completeds = this.todos.filter(todo => todo.completed);
+      const completedsJSON = JSON.stringify(completeds);
+      this.$router.push({
+        path: "/todolist/completed",
+        query: {
+          completeds: completedsJSON
+        }
+      });
+    },
+    // 未完成页面跳转
+    unCompletedPageJump() {
+      const unCompleteds = this.todos.filter(todo => !todo.completed);
+      const unCompletedsJSON = JSON.stringify(unCompleteds);
+      this.$router.push({
+        path: "/todolist/unCompleted",
+        query: {
+          unCompleteds: unCompletedsJSON
+        }
+      });
     }
   },
   computed: {
@@ -104,7 +138,11 @@ export default {
     }
   },
   created() {
-    this.todos = JSON.parse(localStorage.getItem("todos"));
+    if (JSON.parse(localStorage.getItem("todos")) == null) {
+      this.todos = [];
+    } else {
+      this.todos = JSON.parse(localStorage.getItem("todos"));
+    }
   }
 };
 </script>

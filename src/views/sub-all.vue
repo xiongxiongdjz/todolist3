@@ -1,13 +1,12 @@
 <template>
   <div>
-    <!-- {{ $route.query.todos }} -->
     <ul>
       <li v-for="todo in todos" :key="todo.id">
-        <centerTodo
+        <todo
           :todo="todo"
-          :status="status"
-          :outDelete="outDelete"
-          :titleChange="titleChange"
+          :status="$route.query.status"
+          :outDelete="$route.query.outDelete"
+          :titleChange="$route.query.titleChange"
         />
       </li>
     </ul>
@@ -15,11 +14,16 @@
 </template>
 
 <script>
-import CenterTodo from "../components/sub-center-todo";
+import Todo from "../components/todo";
 export default {
-  props: ["todos", "status", "outDelete", "titleChange"],
+  data() {
+    return {
+      todos: JSON.parse(this.$route.query.todos)
+    };
+  },
   components: {
-    CenterTodo
-  }
+    Todo
+  },
+  created() {}
 };
 </script>

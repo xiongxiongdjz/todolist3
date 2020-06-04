@@ -1,20 +1,9 @@
 <template>
   <div class="sub-bottom-button">
     <div v-show="length">
-      <router-link
-        :to="{
-          path: '/todolist/all'
-        }"
-        tag="button"
-        replace
-        >所有</router-link
-      >
-      <router-link :to="{ path: '/todolist/completed' }" tag="button" replace
-        >已完成</router-link
-      >
-      <router-link :to="{ path: '/todolist/unCompleted' }" tag="button" replace
-        >未完成</router-link
-      >
+      <button @click="subAllPageJump">所有</button>
+      <button @click="subCompletedPageJump">已完成</button>
+      <button @click="subUnCompletedPageJump">未完成</button>
       <button @click="subSelectedOut" v-show="displaySom">删除选中</button>
     </div>
   </div>
@@ -22,10 +11,26 @@
 
 <script>
 export default {
-  props: ["selectedOut", "displaySom", "length"],
+  props: [
+    "selectedOut",
+    "displaySom",
+    "length",
+    "allPageJump",
+    "completedPageJump",
+    "unCompletedPageJump"
+  ],
   methods: {
     subSelectedOut() {
       this.selectedOut();
+    },
+    subAllPageJump() {
+      this.allPageJump();
+    },
+    subCompletedPageJump() {
+      this.completedPageJump();
+    },
+    subUnCompletedPageJump() {
+      this.unCompletedPageJump();
     }
   }
 };
